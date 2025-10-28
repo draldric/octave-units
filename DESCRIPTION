@@ -1,0 +1,9 @@
+Name: units
+Version: 1.0.0
+Date: 2025-10-28
+Author: Daniel R. Aldrich
+Maintainer: Daniel R. Aldrich <youremail@example.com>
+Title: Physical Units and Dimensional Analysis for GNU Octave
+Description: Provides a system for defining, converting, and performing arithmetic with physical quantities and units. Compatible with SI, imperial, and custom units.
+License: MIT
+Depends: octave (>= 8.0.0)
