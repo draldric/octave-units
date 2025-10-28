@@ -1,0 +1,25 @@
+# Octave/MATLAB temporary files
+*.asv          # autosave
+*.m~           # backup files
+*.oct          # compiled Octave files
+*.mex*         # compiled MEX files (if any)
+*.o            # object files
+*.lo           # libtool object files
+*.la           # libtool archive files
+*.so           # shared objects
+*.dll          # Windows dynamic libraries
+*.pyc          # python bytecode if any scripts used
+*.log          # logs
+*.DS_Store     # Mac OS
+Thumbs.db      # Windows
+
+# Package build artifacts
+*.tar.gz
+*.zip
+
+# Editor backup files
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
