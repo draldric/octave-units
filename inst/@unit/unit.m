@@ -13,46 +13,45 @@ classdef unit
       u.dims  = dims;
       u.name  = name;
     end
-
-    function str = char(u)
-      if ~isempty(u.name)
-        str = u.name;
-      elseif ~isempty(u.dims.custom)
-        str = u.dims.custom;
-      else
-        str = dim_to_string(u.dims);
-      end
-    end
-
-    function disp(u)
-      fprintf("%g %s\n", u.value, char(u));
-    end
   end
 
   methods (Static)
-    function name = simplify_unit_name(d)
-      % Known physical units
-      persistent known;
-      if isempty(known)
-        known = {
-          "N",  struct('length',1,'mass',1,'time',-2,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-          "Pa", struct('length',-1,'mass',1,'time',-2,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-          "J",  struct('length',2,'mass',1,'time',-2,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-          "W",  struct('length',2,'mass',1,'time',-3,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-          "Hz", struct('length',0,'mass',0,'time',-1,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-          % Dimensionless-but-named
-          "rad", struct('length',0,'mass',0,'time',0,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-          "deg", struct('length',0,'mass',0,'time',0,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-          "rev", struct('length',0,'mass',0,'time',0,'current',0,'temperature',0,'amount',0,'illumination',0,'custom','');
-        };
-      end
-      name = "";
-      for i = 1:rows(known)
-        if isequal(known{i,2}, d)
-          name = known{i,1};
-          return
+      function [name, scale] = simplify_unit_name(d, varargin)
+        persistent known;
+        if isempty(known)
+          known = {};
+        end
+
+        % Add new units dynamically
+        if nargin > 1 && ischar(d) && strcmp(d, "add")
+          if numel(varargin) < 3
+            error("Usage: unit.simplify_unit_name('add', name, dims, scale)");
+          end
+          new_name  = varargin{1};
+          new_dims  = varargin{2};
+          new_scale = varargin{3};
+          for i = 1:rows(known)
+            if strcmp(known{i,1}, new_name)
+              known(i,:) = {new_name, new_dims, new_scale};
+              fprintf("Updated '%s'.\n", new_name);
+              return;
+            end
+          end
+          known(end+1,:) = {new_name, new_dims, new_scale};
+          fprintf("Added '%s'.\n", new_name);
+          return;
+        end
+
+        % Lookup mode
+        name  = "";
+        scale = 1;
+        for i = 1:rows(known)
+          if isequal(known{i,2}, d)
+            name  = known{i,1};
+            scale = known{i,3};
+            return;
+          end
         end
       end
     end
-  end
 end

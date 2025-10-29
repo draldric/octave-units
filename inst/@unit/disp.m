@@ -1,3 +1,4 @@
 function disp(u)
-  fprintf("%g %s\n", u.value, char(u));
+  [~, scale] = unit.simplify_unit_name(u.dims);
+  fprintf("%g %s\n", u.value/scale, char(u));
 end

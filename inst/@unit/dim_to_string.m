@@ -4,19 +4,22 @@ function s = dim_to_string(d)
     s = known;
     return
   end
-
-  base = {'length','mass','time','current','temperature','amount','illumination'};
-  names = {'m','kg','s','A','K','mol','cd'};
-  parts = {};
-  for i = 1:numel(base)
-    p = d.(base{i});
-    if p ~= 0
-      if p == 1
-        parts{end+1} = names{i};
-      else
-        parts{end+1} = sprintf('%s^%g', names{i}, p);
-      end
-    end
-  end
+  if isempty(d.custom)
+		base = {'length','mass','time','current','temperature','amount','illumination'};
+		names = {'m','kg','s','A','K','mol','cd'};
+		parts = {};
+		for i = 1:numel(base)
+			p = d.(base{i});
+			if p ~= 0
+				if p == 1
+					parts{end+1} = names{i};
+				else
+					parts{end+1} = sprintf('%s^%g', names{i}, p);
+				end
+			end
+		end
+	else
+		parts = {d.custom};
+	end
   s = strjoin(parts, '*');
 end

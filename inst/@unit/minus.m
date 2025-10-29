@@ -1,4 +1,4 @@
-function r = plus(a,b)
+function r = minus(a,b)
     if isequal(a.dims,b.dims)
         r = unit(a.value - b.value, a.dims, a.name);
         return
