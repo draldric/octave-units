@@ -5,7 +5,7 @@ function s = dim_to_string(d)
     return
   end
 
-  base = {'length','mass','time','current','temerature','amount','illumination'};
+  base = {'length','mass','time','current','temperature','amount','illumination'};
   names = {'m','kg','s','A','K','mol','cd'};
   parts = {};
   for i = 1:numel(base)

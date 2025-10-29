@@ -1,18 +1,25 @@
 function r = mrdivide(a,b)
-  if isa(a,"unit") && isa(b,"unit")
-    d = sub_dims(a.dims, b.dims);
-    r = unit(a.value/b.value, d, unit.simplify_unit_name(d));
-  elseif isa(a,"unit")
-    r = unit(a.value/b, a.dims, a.name);
-  elseif isa(b,"unit")
-    d = structfun(@(x)-x, b.dims, "UniformOutput", false);
-    r = unit(a/b.value, d, unit.simplify_unit_name(d));
-  end
-end
+    if ~isa(a,'unit'), a = unit(a, struct('length',0,'mass',0,'time',0,'current',0,'temperature',0,'amount',0,'illumination',0,'custom',''), ''); end
+    if ~isa(b,'unit'), b = unit(b, struct('length',0,'mass',0,'time',0,'current',0,'temperature',0,'amount',0,'illumination',0,'custom',''), ''); end
 
-function d = sub_dims(d1,d2)
-  f = fieldnames(d1);
-  for i = 1:numel(f)
-    d.(f{i}) = d1.(f{i}) - d2.(f{i});
-  end
+    f = fieldnames(a.dims);
+    new_dims = a.dims;
+    for i = 1:numel(f)
+        if strcmp(f{i},'custom')
+            if isempty(a.dims.custom)
+                if isempty(b.dims.custom)
+                    new_dims.custom = '';
+                else
+                    new_dims.custom = ['1/' b.dims.custom];
+                end
+            elseif isempty(b.dims.custom)
+                new_dims.custom = a.dims.custom;
+            else
+                new_dims.custom = [a.dims.custom '/' b.dims.custom];
+            end
+        else
+            new_dims.(f{i}) = a.dims.(f{i}) - b.dims.(f{i});
+        end
+    end
+    r = unit(a.value / b.value, new_dims, unit.simplify_unit_name(new_dims));
 end
